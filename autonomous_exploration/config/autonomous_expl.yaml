@@ -3,11 +3,11 @@
 velocities_architecture: 'motor_schema'
 
 # Debugging purposes
-print_velocities: False
+print_velocities: True
 
 # True for calculating targets
 # False for just wandering
-calculate_target: True
+calculate_target: False
 
 # Topics to read and post data
 # Subscribers
