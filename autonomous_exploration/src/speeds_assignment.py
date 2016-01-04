@@ -105,7 +105,7 @@ class RobotController:
     def produceSpeedsLaser(self):
 
         # Get the laser scan
-        scan   = self.laser_aggregation.laser_scan
+        scan = self.laser_aggregation.laser_scan
     
         linear  = 0
         angular = 0
@@ -113,6 +113,30 @@ class RobotController:
         # YOUR CODE HERE ------------------------------------------------------
         # Adjust the linear and angular velocities using the laser scan
     
+        #Static data for lasers
+        lasers = 667
+        laser_max_dist = 4.09000015258789
+        
+        #Group lasers for better results
+        lasers_partition_num = 10
+        partition_size = lasers/lasers_partition_num
+        lasers_partition = [scan[x:x+partition_size] for x in xrange(0, len(scan), partition_size)]
+        
+        #Getting the average value for the 3 main groups we need
+        avg_left = sum(lasers_partition[3]) / float(partition_size)
+        avg_center = sum(lasers_partition[5]) / float(partition_size)
+        avg_right = sum(lasers_partition[7]) / float(partition_size)
+        
+        #Calculate linear velocity
+        linear = avg_center / laser_max_dist   
+        
+        #Calculate  angular velocity, different approach if linear velocity is below 1 m/s or not
+        angle = avg_right - avg_left
+        if linear > 1:
+            angular = angle / avg_center
+        else:
+            angular = angle
+
         # ---------------------------------------------------------------------
     
         return [linear, angular]
@@ -154,8 +178,8 @@ class RobotController:
         # Get the speeds using the motor schema approach
         # YOUR CODE HERE ------------------------------------------------------
 
-        self.linear_velocity = l_sonar
-        self.angular_velocity = a_sonar     
+        self.linear_velocity = l_laser
+        self.angular_velocity = a_laser     
 
         # ---------------------------------------------------------------------
 
