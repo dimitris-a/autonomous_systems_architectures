@@ -107,8 +107,9 @@ class RobotPerception:
             (translation, rotation) = self.listener.lookupTransform\
                     (self.map_frame, self.base_footprint_frame, rospy.Time(0))
         # Catch the exception if something is wrong
-        except (tf.LookupException, tf.ConnectivityException, \
-                tf.ExtrapolationException):
+        #except(tf.LookupException, tf.ConnectivityException,tf.ExtrapolationException):
+        # Catch any exception, previous line don't catch exception thrown by rospy.Time
+        except:
             # Just print the error to try again
             print "Error in tf"
             return
@@ -132,6 +133,12 @@ class RobotPerception:
         # only for updating the coverage, try not to add duplicates
         # Each point should be in the form of [x,y] (theta does not concern us)
         
+        #Try to find value's index, if not found append it to the list
+        try:
+            self.robot_trajectory.index([self.robot_pose['x'] , self.robot_pose['y'] ])
+        except ValueError:
+            self.robot_trajectory.append([self.robot_pose['x'] , self.robot_pose['y'] ])
+
         # ---------------------------------------------------------------------
 
         t_path = Path()
@@ -226,4 +233,3 @@ class RobotPerception:
             p[0] - self.origin['x'],\
             p[1] - self.origin['y']\
             ]
-
