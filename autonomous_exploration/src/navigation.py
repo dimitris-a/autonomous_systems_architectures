@@ -153,7 +153,7 @@ class Navigation:
         g_robot_pose = self.robot_perception.getGlobalCoordinates(\
             [self.robot_perception.robot_pose['x_px'],\
             self.robot_perception.robot_pose['y_px']])
-
+            
         # Need to reverse the path??
         self.path = self.path_planning.createPath(\
             local_ogm,\

@@ -138,8 +138,8 @@ class RobotPerception:
             self.robot_trajectory.index([self.robot_pose['x'] , self.robot_pose['y'] ])
         except ValueError:
             self.robot_trajectory.append([self.robot_pose['x'] , self.robot_pose['y'] ])
-
-        # ---------------------------------------------------------------------
+            
+  # ---------------------------------------------------------------------
 
         t_path = Path()
         t_path.header.frame_id = "map"
@@ -206,13 +206,20 @@ class RobotPerception:
         # PS. Try to make it fast :)
         # PS2. Do not have coverage values on obstacles or unknown space!
         # If done correctly, the coverage will appear purple in rviz
-
+        
+        p = self.getGlobalCoordinates([self.robot_pose['x_px'],\
+            self.robot_pose['y_px']])
+        for i in range(p[0], p[0]+10):
+            for j in range(p[1]-5, p[1]+5):
+                self.coverage[i][j] = 100
+        
         # ---------------------------------------------------------------------
         # Publishing coverage ogm to see it in rviz
         coverage_ogm = OccupancyGrid()
         coverage_ogm.header.frame_id = "map"
         coverage_ogm.info = self.ogm_info
         coverage_ogm.data = numpy.zeros(self.ogm_info.width * self.ogm_info.height)
+        
         for i in range(0, self.ogm_info.width):
             for j in range(0, self.ogm_info.height):
                 coverage_ogm.data[i + self.ogm_info.width * j] = self.coverage[i][j]
